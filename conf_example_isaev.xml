@@ -39,6 +39,39 @@
 			<code start="" end="" /><!-- LF=\n=&#xA; -->
 			<minimum enable="1" type="1" margin="" ref_length="" remove_length="" /><!--Minimum cutting. Only for Cu layer: Type:0 simple,1 Voroni -->
 		</layer>
+
+		<layer name="Layer 3" type="0"> <!--Type:0=Cu, 1=Drill, 2=Edge,3=Paste (Stencil mask)-->
+			<gerber dir="" file="L3-INT1.gbr" ext=""/>
+			<mirror enable="0" axis="0" px="0" py="0"/>
+			<rot angle="0" />
+			<circle angle=""/>
+			<!--tool type: "Drill" layer Only. 0="Endmill", 1="Drill": "dia" is only for Endmil -->
+			<tool dia="0.1" type="2" depth="-0.05" z_step="-0.2" xy_speed="100" z_speed="40" circle_ang="20" asobi="0.001" />
+			<scrape step_r="1.1" step="0.1" max="4" margin_r="1.1"/>
+			<shift x_offset="" y_offset="" />
+			<spindl enable="1" speed="100" />
+			<unit out="1.0"/>
+			<draw color="yellow" fill="" convcolor="b"/> <!-- See https://matplotlib.org/api/colors_api.html -->
+			<code start="" end="" /><!-- LF=\n=&#xA; -->
+			<minimum enable="1" type="1" margin="" ref_length="" remove_length="" /><!--Minimum cutting. Only for Cu layer: Type:0 simple,1 Voroni -->
+		</layer>
+
+		<layer name="Level 4" type="0"> <!--Type:0=Cu, 1=Drill, 2=Edge,3=Paste (Stencil mask)-->
+			<gerber dir="" file="L4-PWR.gbr" ext=""/>
+			<mirror enable="0" axis="0" px="0" py="0"/>
+			<rot angle="0" />
+			<circle angle=""/>
+			<!--tool type: "Drill" layer Only. 0="Endmill", 1="Drill": "dia" is only for Endmil -->
+			<tool dia="0.1" type="2" depth="-0.05" z_step="-0.2" xy_speed="100" z_speed="40" circle_ang="20" asobi="0.001" />
+			<scrape step_r="1.1" step="0.1" max="4" margin_r="1.1"/>
+			<shift x_offset="" y_offset="" />
+			<spindl enable="1" speed="100" />
+			<unit out="1.0"/>
+			<draw color="purple" fill="" convcolor="b"/> <!-- See https://matplotlib.org/api/colors_api.html -->
+			<code start="" end="" /><!-- LF=\n=&#xA; -->
+			<minimum enable="1" type="1" margin="" ref_length="" remove_length="" /><!--Minimum cutting. Only for Cu layer: Type:0 simple,1 Voroni -->
+		</layer>
+
 		<layer name="Back" type="0"> <!--Type:0=Cu, 1=Drill, 2=Edge,3=Paste (Stencil mask)-->
 			<gerber dir="" file="BOTTOM.gbr" ext=".gbr"/>
 			<mirror enable="0" axis="0" px="0" py="0"/>

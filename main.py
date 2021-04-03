@@ -203,6 +203,7 @@ def FirstPlot(prj):
 			tmp_ymin = 0.0
 			op = gs.Gerber_OP(grb,float(layer.tool_dia))
 			op.gerber2shapely()
+			# На этом этапе внутри op лежат все линии, которые только возможны для текущего слоя
 			op.in_unit=grb.in_unit
 			prj.layer_plot[layer.name]=PoltUnit(prj.MainPlot,layer,op.raw_figs,layer.draw_color)
 		if int(layer.type) == 1:	#Drill layer

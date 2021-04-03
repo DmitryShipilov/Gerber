@@ -9,6 +9,14 @@ from shapely import affinity
 import imp
 import numpy as np
 import math
+
+class Curcuit:
+	def __init__(self):
+		self.lines = []
+
+
+
+
 class Gerber_OP:
 	def __init__(self, gerber, tool_d=0):
 		#self.tiny = 1e-6
@@ -175,7 +183,11 @@ class Gerber_OP:
 				self.figs.add(self.Figs(Point(gbr.cx,gbr.cy).buffer(float(gbr.r)-self.tool_r,resolution=gbr.sides)))
 				self.raw_figs.add(self.Figs(Point(gbr.cx,gbr.cy).buffer(float(gbr.r),resolution=gbr.sides)))
 	def gerber2shapely(self):
+		counter = 0
 		for gbr in self.gerber.figures:
+			if counter == 1016:
+				a = 1
+
 			if(gbr.active < 1):
 				continue
 			if(gbr.type > 4):
@@ -193,9 +205,11 @@ class Gerber_OP:
 					self.tmp_figs.add(self.Figs(tmp_polygon.buffer(float(gbr.w)/2.0+self.tool_r, cap_style=cap_s)))
 					raw_polygon = tmp_polygon.buffer(float(gbr.w)/2.0, cap_style=cap_s)
 					self.raw_figs.add(self.Figs(raw_polygon))
+					"""
 					if raw_polygon.interiors:
 						for interior in raw_polygon.interiors:
 							self.raw_figs.add(self.Figs(Polygon(interior)))
+					"""
 				else:
 					if self.zone_segment:
 						if LineString(gbr.points).is_simple:
@@ -236,6 +250,7 @@ class Gerber_OP:
 				#Polygon
 				self.tmp_figs.add(self.Figs(Point(gbr.cx,gbr.cy).buffer(float(gbr.r)+self.tool_r,resolution=gbr.sides)))
 				self.raw_figs.add(self.Figs(Point(gbr.cx,gbr.cy).buffer(float(gbr.r),resolution=gbr.sides)))
+			counter += 1
 
 	def reduce_lines(self):
 		print ("Reduce Lines")
