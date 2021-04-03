@@ -1,0 +1,127 @@
+<project name="test">
+<!--Set default values-->
+	<defaults>
+		<gerber dir="./gerber_data" ext=".gbr"/>
+		<mirror enable="0" axis="0" px="0" py="0"/>
+		<rot angle="0" /><!--Rotation angle. -->
+		<circle angle="30"/><!--number fo fragment. If set "6", the circle will be a hexagon. -->
+		<machine mcode="0" move_height="1.0" ini_x="0" ini_y="0" ini_z="5.0"/>
+		<tool dia="0.1" type="2" depth="-0.05" z_step="-0.2" xy_speed="100" z_speed="40" circle_ang="20" asobi="0.001" />
+		<!--tool type: 0="Endmill", 1="Drill": Drill Only. -->
+		<!--dia:Diameter of the tool. Drill's "dia" is only for Endmil-->
+		<scrape step_r="1.1" step="0.1" max="4" margin_r="1.1"/><!--Scrape Cu layers. only of Cu layers. Set "max" to "1" for disable multi-scrape -->
+		<shift x_offset="-130.0" y_offset="160.0" /><!--Off set. -->
+		<spindl enable="1" speed="100" /><!--Spindl control. -->
+		<unit out="1.0"/><!--Set output unit. Set "25.4" for Inch.-->
+		<draw color="BLACK" fill=""/><!--reserved -->
+		<color zoom="VIOLET RED" dist="ORANGE" /><!--reserved -->
+		<result draw="1"/><!--Quick view-->
+		<code start="G21&#xA;G90&#xA;G1 Z2 F2000&#xA;M3 S10000&#xA;G4 S3&#xA;" end="G1 Z2.0000 F2000&#xA;G4 S5&#xA;M5&#xA;" /><!-- LF=\n=&#xA; -->
+		<!-- If you use M code in "code start" or "code end", you should better set "machine mcode" to "0" --> 
+		<minimum enable="0" type="0" margin="0.5" ref_length="0.01" remove_length="0.01" /><!--Minimum cutting. Only for Cu layer: Type:0 simple,1 reserved -->
+	</defaults>
+
+<!--Layer setting. -->
+<!--If the value is empty (""), default value will be used. -->
+	<layers>
+		<layer name="Front" type="0"> <!--Type:0=Cu, 1=Drill, 2=Edge,3=Paste (Stencil mask)-->
+			<gerber dir="" file="TOP.gbr" ext=""/>
+			<mirror enable="0" axis="0" px="0" py="0"/>
+			<rot angle="0" />
+			<circle angle=""/>
+			<!--tool type: "Drill" layer Only. 0="Endmill", 1="Drill": "dia" is only for Endmil -->
+			<tool dia="0.1" type="2" depth="-0.05" z_step="-0.2" xy_speed="100" z_speed="40" circle_ang="20" asobi="0.001" />
+			<scrape step_r="1.1" step="0.1" max="4" margin_r="1.1"/>
+			<shift x_offset="" y_offset="" />
+			<spindl enable="1" speed="100" />
+			<unit out="1.0"/>
+			<draw color="#ee5555" fill="" convcolor="b"/> <!-- See https://matplotlib.org/api/colors_api.html -->
+			<code start="" end="" /><!-- LF=\n=&#xA; -->
+			<minimum enable="1" type="1" margin="" ref_length="" remove_length="" /><!--Minimum cutting. Only for Cu layer: Type:0 simple,1 Voroni -->
+		</layer>
+		<layer name="Back" type="0"> <!--Type:0=Cu, 1=Drill, 2=Edge,3=Paste (Stencil mask)-->
+			<gerber dir="" file="BOTTOM.gbr" ext=".gbr"/>
+			<mirror enable="0" axis="0" px="0" py="0"/>
+			<rot angle="0" />
+			<circle angle="30"/>
+			<tool dia="0.1" type="2" depth="-0.07" z_step="-0.2" xy_speed="100" z_speed="40" circle_ang="20" asobi="0.001" />
+			<scrape step_r="1.1" step="0.1" max="4" margin_r="1.1"/>
+			<shift x_offset="" y_offset="" />
+			<spindl enable="1" speed="100" />
+			<unit out="1.0"/>
+			<draw color="b" fill="" convcolor="red"/> <!-- See https://matplotlib.org/api/colors_api.html -->
+			<code start="" end="" /><!-- LF=\n=&#xA; -->
+			<minimum enable="0" type="1" margin="0.5" ref_length="0.01" remove_length="0.01" /><!--Minimum cutting. Only for Cu layer: Type:0 simple,1 Voronoi -->
+		</layer>
+
+		<layer name="Drill" type="1"> <!--Type:0=Cu, 1=Drill, 2=Edge,3=Paste (Stencil mask)-->
+			<gerber dir="" file="CPI2_MAIN-1-6.drl" ext=".drl"/>
+			<mirror enable="0" axis="0" px="0" py="0"/>
+			<rot angle="0" />
+			<circle angle="30"/>
+			<!--tool type: 0="Endmill", 1="Drill": "Drill" layer Only. "dia" is only for Endmil -->
+			<tool dia="0.8" type="0" depth="-1.9" z_step="-0.5" xy_speed="40" z_speed="40" circle_ang="20" asobi="0.001" />
+			<scrape step_r="1.1" step="2" max="4" margin_r="1.1"/>
+			<shift x_offset="" y_offset="" />
+			<spindl enable="1" speed="100" />
+			<unit out="1.0"/>
+			<divide_gcode by_tool="0"/> <!--"Drill" layer Only: If you set "1", separated drill files are generated-->
+			<draw color="k" fill="" convcolor="green"/> <!-- See https://matplotlib.org/api/colors_api.html -->
+			<code start=" " end=" " /><!-- LF=\n=&#xA; -->
+		</layer>
+		<layer name="Drill Non Plated Hole" type="1"> <!--Type:0=Cu, 1=Drill, 2=Edge,3=Paste (Stencil mask)-->
+			<gerber dir="" file="xbee_test_usb1_1-NPTH.drl" ext=".drl"/>
+			<mirror enable="0" axis="0" px="0" py="0"/>
+			<rot angle="0" />
+			<circle angle="30"/>
+			<!--tool type: 0="Endmill", 1="Drill": Drill layer Only. "dia" is only for Endmil -->
+			<tool dia="0.8" type="0" depth="-1.9" z_step="-0.5" xy_speed="40" z_speed="40" circle_ang="20" asobi="0.001" />
+			<scrape step_r="1.1" step="2" max="4" margin_r="1.1"/>
+			<shift x_offset="" y_offset="" />
+			<spindl enable="1" speed="100" />
+			<unit out="1.0"/>
+			<draw color="k" fill="" convcolor="b"/> <!-- See https://matplotlib.org/api/colors_api.html -->
+			<code start=" " end=" " /><!-- LF=\n=&#xA; -->
+		</layer>
+		<layer name="Edge" type="2"> <!--Type:0=Cu, 1=Drill, 2=Edge,3=Paste (Stencil mask)-->
+			<gerber dir="" file="xbee_test_usb1_1-Edge.Cuts.gm1" ext=".gbr"/>
+			<mirror enable="0" axis="0" px="0" py="0"/>
+			<rot angle="0" />
+			<circle angle="30"/>
+			<tool dia="0.8" type="1" depth="-1.9" z_step="-0.5" xy_speed="40" z_speed="40" circle_ang="20" asobi="0.001" />
+			<scrape step_r="1.1" step="2" max="4" margin_r="1.1"/>
+			<shift x_offset="" y_offset="" />
+			<spindl enable="1" speed="100" />
+			<unit out="1.0"/>
+			<draw color="g" fill="" convcolor="b"/> <!-- See https://matplotlib.org/api/colors_api.html -->
+			<code start="" end="" /><!-- LF=\n=&#xA; -->
+
+		</layer>
+		<layer name="Paste_Front" type="3"> <!--Type:0=Cu, 1=Drill, 2=Edge,3=Paste (Stencil mask)-->
+			<gerber dir="" file="PASTE_TOP.gbr" ext=""/>
+			<mirror enable="0" axis="0" px="0" py="0"/>
+			<rot angle="0" />
+			<circle angle=""/>
+			<tool dia="0.1" type="2" depth="-0.05" z_step="-0.2" xy_speed="" z_speed="" circle_ang="20" asobi="0.001" />
+			<scrape step_r="1.1" step="0.1" max="4" margin_r="1.1"/>
+			<shift x_offset="" y_offset="" />
+			<spindl enable="1" speed="100" />
+			<unit out="1.0"/>
+			<draw color="r" fill="" convcolor="cyan"/> <!-- See https://matplotlib.org/api/colors_api.html -->
+			<code start="" end="" /><!-- LF=\n=&#xA; -->
+		</layer>
+		<layer name="Paste_Back" type="3"> <!--Type:0=Cu, 1=Drill, 2=Edge,3=Paste (Stencil mask)-->
+			<gerber dir="" file="PASTE_BOT.gbr" ext=""/>
+			<mirror enable="0" axis="0" px="0" py="0"/>
+			<rot angle="0" />
+			<circle angle=""/>
+			<tool dia="0.1" type="2" depth="-0.05" z_step="-0.2" xy_speed="" z_speed="" circle_ang="20" asobi="0.001" />
+			<scrape step_r="1.1" step="0.1" max="4" margin_r="1.1"/>
+			<shift x_offset="" y_offset="" />
+			<spindl enable="1" speed="100" />
+			<unit out="1.0"/>
+			<draw color="r" fill="" convcolor="cyan"/> <!-- See https://matplotlib.org/api/colors_api.html -->
+			<code start="" end="" /><!-- LF=\n=&#xA; -->
+		</layer>
+	</layers>
+</project>
