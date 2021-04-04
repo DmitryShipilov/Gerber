@@ -273,7 +273,7 @@ class Gerber:
 		print ("Start Parse Gerber data")
 		for line in self.gerber_lines:
 			if not line:
-				break
+				continue
 			print (line)
 			xx = re.search("X([\d\-]+)\D",line)
 			yy = re.search("Y([\d\-]+)\D",line)
