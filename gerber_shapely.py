@@ -1,6 +1,6 @@
 from shapely.geometry import Point,LineString,Polygon,box,MultiLineString
-#from shapely.geometry import LinearRing,MultiPolygon
-#from shapely.geometry.polygon import orient
+from shapely.geometry import LinearRing,MultiPolygon
+from shapely.geometry.polygon import orient
 from shapely.ops import cascaded_union
 from shapely.ops import linemerge
 from shapely import affinity
@@ -205,10 +205,18 @@ class Gerber_OP:
 					self.tmp_figs.add(self.Figs(tmp_polygon.buffer(float(gbr.w)/2.0+self.tool_r, cap_style=cap_s)))
 					raw_polygon = tmp_polygon.buffer(float(gbr.w)/2.0, cap_style=cap_s)
 					self.raw_figs.add(self.Figs(raw_polygon))
+
+
 					"""
-					if raw_polygon.interiors:
-						for interior in raw_polygon.interiors:
-							self.raw_figs.add(self.Figs(Polygon(interior)))
+					if not isinstance(raw_polygon, MultiPolygon):
+						if raw_polygon.interiors:
+							for interior in raw_polygon.interiors:
+								self.raw_figs.add(self.Figs(Polygon(interior)))
+					else:
+						for poly in raw_polygon:
+							if poly.interiors:
+								for interior in poly.interiors:
+									self.raw_figs.add(self.Figs(Polygon(interior)))
 					"""
 				else:
 					if self.zone_segment:

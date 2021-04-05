@@ -209,7 +209,7 @@ class Gerber:
 		self.abs = 0
 		self.rel = 1
 		self.out_unit = out_unit
-		self.in_unit=self.inch
+		self.in_unit=self.mm
 		self.unit = self.in_unit/self.out_unit
 		#self.in_unit=1	#0:mm,1:inchi
 		self.coor = self.abs
