@@ -1,3 +1,4 @@
+import os
 import sys
 import numpy as np
 from matplotlib import pyplot
@@ -5,7 +6,9 @@ from matplotlib.widgets import Button,CheckButtons
 import gerber
 import gerber_shapely as gs
 
+
 import pandas as pd
+import ctypes
 import random
 
 import xml.etree.ElementTree as et
@@ -194,7 +197,7 @@ def FirstPlot(prj):
 		grb = gerber.Gerber(layer.gerber_dir,layer.gerber_file,float(prj.unit_out))
 		prj.CheckButtonNames=prj.CheckButtonNames+(layer.name,)
 		prj.CheckButtonBools=prj.CheckButtonBools+(True,)
-		prj.CheckButtonNames=prj.CheckButtonNames+(layer.name+convname,)
+		#prj.CheckButtonNames=prj.CheckButtonNames+(layer.name+convname,)
 		prj.CheckButtonBools=prj.CheckButtonBools+(True,)
 		if int(layer.type) == 0:	#Cu layer
 			if float(layer.scrape_step_r) !=1.0 and float(layer.scrape_step_r) !=0.0:
@@ -336,14 +339,26 @@ def Conv(prj):
 			p_op.affine_trans(p_op.raw_figs)
 			p_op.fig_out()
 
+
+def Mbox(title, text, style = 0):
+    return ctypes.windll.user32.MessageBoxW(0, text, title, style)
+
 def createExcel():
 	curcuits = {}
 	max_curuits = random.randint(500, 1000)
+	voltages = []
 	for index in range(max_curuits):
-		curcuits[index] = random.uniform(0.1, 5)
+		voltages.insert(index, random.uniform(1, 5))
 
-	df = pd.DataFrame(data = curcuits)
-	df.to_excel('D:\MAI\!Magistrature\Dissertaton\Проект диплома\Gerbrer description\gerber2gcode\python_system_equation')
+	curcuits[0] = voltages
+	df = pd.DataFrame.from_dict(curcuits)
+
+	cur_dir = os.getcwd()
+	cur_dir = cur_dir.replace('\\', '/')
+
+	path_xls = cur_dir + '/output.xlsx'
+
+	df.to_excel(path_xls)
 
 
 def MainAxes(prj):
@@ -355,13 +370,10 @@ def MainAxes(prj):
 	#axes([left, bottom, width, height])
 	prj.DispLayer = pyplot.axes([0.05, 0.25, 0.15, 0.7])
 	prj.MainPlot = pyplot.axes([0.27, 0.25, 0.7, 0.7])
-	prj.MsgWindow = pyplot.axes([0.05, 0.05, 0.7, 0.1])
-	prj.Button = pyplot.axes([0.85, 0.05, 0.1, 0.05])
+	prj.Button = pyplot.axes([0.85, 0.20, 0.1, 0.05])
 	####### Axes setup ########
 	#prj.DispLayer.axis('off')
-	prj.MsgWindow.axis('off')
 	prj.DispLayer.set_title("Layers")
-	prj.MsgWindow.set_title("Messages")
 	prj.MainPlot.set_aspect(1)
 	#prj.DispLayer.set_axis_bgcolor('w')
 	prj.CheckButtonNames=()
@@ -389,6 +401,8 @@ def MainAxes(prj):
 			"""
 
 			createExcel()
+			Mbox('Message', 'Calculating done')
+
 
 			print("DONE")
 
