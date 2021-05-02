@@ -5,6 +5,9 @@ from matplotlib.widgets import Button,CheckButtons
 import gerber
 import gerber_shapely as gs
 
+import pandas as pd
+import random
+
 import xml.etree.ElementTree as et
 
 INCH = 25.4 #mm
@@ -333,9 +336,19 @@ def Conv(prj):
 			p_op.affine_trans(p_op.raw_figs)
 			p_op.fig_out()
 
+def createExcel():
+	curcuits = {}
+	max_curuits = random.randint(500, 1000)
+	for index in range(max_curuits):
+		curcuits[index] = random.uniform(0.1, 5)
+
+	df = pd.DataFrame(data = curcuits)
+	df.to_excel('D:\MAI\!Magistrature\Dissertaton\Проект диплома\Gerbrer description\gerber2gcode\python_system_equation')
+
+
 def MainAxes(prj):
 	fig = pyplot.figure(figsize=(14,10))
-	fig.canvas.set_window_title('pyGerber2Gcode')
+	fig.canvas.set_window_title('DiagnosticControl')
 	fig.suptitle(prj.name, fontsize=10, fontweight='bold')
 
 	####### Create axes ########
@@ -367,11 +380,17 @@ def MainAxes(prj):
 			pyplot.draw()
 	class Action(object):
 		def conv(self, event):
-			print ("Convert start!")
+			print ("Calculate start!")
+			"""
 			prj.MainPlot.cla()
 			prj.layer_plot={}
 			Conv(prj)
 			pyplot.draw()
+			"""
+
+			createExcel()
+
+			print("DONE")
 
 	unit = "mm"
 	if prj.unit_out == 25.4:
@@ -384,7 +403,7 @@ def MainAxes(prj):
 	check = CheckButtons(prj.DispLayer, prj.CheckButtonNames, prj.CheckButtonBools)
 	check.on_clicked(func)
 	callback = Action()
-	bconv = Button(prj.Button, 'Convert')
+	bconv = Button(prj.Button, 'Calculate voltage')
 	bconv.on_clicked(callback.conv)
 	pyplot.show()
 
