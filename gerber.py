@@ -86,6 +86,9 @@ class Drill:
 			dd = re.search("D([\d]+)\D",drill)
 			gg = re.search("G([\d]+)\D",drill)
 			xy = re.search("X([\d\.-]+)Y([\d\.-]+)G([\d]+)X([\d\.-]+)Y([\d\.-]+)",drill)
+			rr = re.search("R", drill)
+			if (rr):
+				a = 4
 
 			if (gg):
 				self.parse_drill_g(gg.group(1),drill)
