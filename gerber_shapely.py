@@ -14,9 +14,6 @@ class Curcuit:
 	def __init__(self):
 		self.lines = []
 
-
-
-
 class Gerber_OP:
 	def __init__(self, gerber, tool_d=0):
 		#self.tiny = 1e-6

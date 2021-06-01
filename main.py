@@ -5,7 +5,7 @@ from matplotlib import pyplot
 from matplotlib.widgets import Button,CheckButtons
 import gerber
 import gerber_shapely as gs
-
+import math as m
 
 import pandas as pd
 import ctypes
@@ -71,8 +71,6 @@ class Layer:
 		self.draw_color="red"
 		self.draw_fill=""
 		self.draw_convcolor="red"
-
-
 
 
 class Line:
@@ -346,11 +344,30 @@ def Mbox(title, text, style = 0):
 def createExcel():
 	curcuits = {}
 	max_curuits = random.randint(500, 1000)
+
 	voltages = []
 	for index in range(max_curuits):
 		voltages.insert(index, random.uniform(1, 5))
 
-	curcuits[0] = voltages
+	currents = []
+	for index in range(max_curuits):
+		currents.insert(index, random.uniform(50, 100))
+
+
+	lenghts = []
+	for index in range(max_curuits):
+		lenghts.insert(index, random.uniform(10, 500))
+
+	widths = []
+	for index in range(max_curuits):
+		widths.insert(index, random.uniform(50, 3000))
+
+	curcuits['мВ'] = voltages
+	curcuits['А'] = currents
+	curcuits['Длина, мм'] = lenghts
+	curcuits['Wmin, мкм'] = widths
+
+
 	df = pd.DataFrame.from_dict(curcuits)
 
 	cur_dir = os.getcwd()
@@ -455,6 +472,28 @@ def main():
         print("Error:There are no layers")
         exit()
     MainAxes(prj)
+
+def calcCurrent(width, height):
+	C_0 = 485 # Дж/кг*К удельная теплоёмкость
+	R_m = 8930 # Кг/м3. удельная плотность
+	delta_Tmax = 100 # К
+	R_r = 0.0172 # Ом * мм2/(м) удельное сопротивление меди
+	alpha = 0.0038 # 1 / K температурный коэффициент меди
+	t_max = 0.005 # наибольшая длительность адиабатического процесса
+
+	I = width * height * m.sqrt((C_0 * R_m * delta_Tmax) / (R_r * (1 + alpha * delta_Tmax)))
+	return I
+
+def calcVoltage(length, width, height):
+	C_0 = 485 # Дж/кг*К удельная теплоёмкость
+	R_m = 8930 # Кг/м3. удельная плотность
+	delta_Tmax = 100 # К
+	R_r = 0.0172 # Ом * мм2/(м) удельное сопротивление меди
+	alpha = 0.0038 # 1 / K температурный коэффициент меди
+	t_max = 0.005 # наибольшая длительность адиабатического процесса
+
+	delta_U = length * alpha * delta_Tmax * m.sqrt((C_0 * R_m * R_r * delta_Tmax) / (t_max * (1 + alpha * delta_Tmax)))
+	return delta_U
 
 if __name__ == "__main__":
 	main()
