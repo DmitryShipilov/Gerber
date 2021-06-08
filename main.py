@@ -6,6 +6,7 @@ from matplotlib.widgets import Button,CheckButtons
 import gerber
 import gerber_shapely as gs
 import math as m
+import numpy
 
 import pandas as pd
 import ctypes
@@ -34,9 +35,9 @@ class Layer:
 		self.gerbere_ext="*.gtl"
 		self.name = name
 		self.type = layertype
-		self.gcode_ext="*.ngc"
-		self.gcode_dir = ""
-		self.gcode_file = ""
+		#self.gcode_ext="*.ngc"
+		#self.gcode_dir = ""
+		#self.gcode_file = ""
 		self.mirror_enable = False
 		self.mirror_axis = 0
 		self.mirror_px = 0
@@ -189,6 +190,13 @@ def PoltUnit(ax,layer,figs,color):
 				plots.append(plot_point(ax, polygon.element.coords,color))
 	return plots
 
+def SolveKramer(x, y, c):
+	Matrix = numpy.array([x[0], y[0]], [x[1], y[1]])
+	Vector = numpy.array([c[0], c[1]])
+
+	return numpy.linalg.solve(Matrix, Vector)
+
+
 def FirstPlot(prj):
 	for layer in prj.layers:
 		layer_setting(layer,prj)
@@ -231,6 +239,7 @@ def FirstPlot(prj):
 			op.paste2shapely()
 			prj.layer_plot[layer.name]=PoltUnit(prj.MainPlot,layer,op.raw_figs,layer.draw_color)
 
+import time
 def Conv(prj):
 	#prj.MsgWindow.text(0,0.9,"Start Convert")
 	#pyplot.draw()
@@ -347,25 +356,32 @@ def createExcel():
 
 	voltages = []
 	for index in range(max_curuits):
-		voltages.insert(index, random.uniform(1, 5))
+		voltages.insert(index, round(random.uniform(1, 5), 2))
 
 	currents = []
 	for index in range(max_curuits):
-		currents.insert(index, random.uniform(50, 100))
-
+		currents.insert(index, round(random.uniform(50, 100), 2))
 
 	lenghts = []
 	for index in range(max_curuits):
-		lenghts.insert(index, random.uniform(10, 500))
+		lenghts.insert(index, round(random.uniform(10, 280), 2))
 
 	widths = []
+
+	possible_widths = []
+	possible_widths.append(float(0.7))
+	possible_widths.append(float(1.0))
+	possible_widths.append(float(0.5))
+	possible_widths.append(float(0.9))
+	possible_widths.append(float(1.5))
+
 	for index in range(max_curuits):
-		widths.insert(index, random.uniform(50, 3000))
+		widths.insert(index, possible_widths[round(random.uniform(0, 4))])
 
 	curcuits['мВ'] = voltages
 	curcuits['А'] = currents
 	curcuits['Длина, мм'] = lenghts
-	curcuits['Wmin, мкм'] = widths
+	curcuits['Wmin, мм'] = widths
 
 
 	df = pd.DataFrame.from_dict(curcuits)
@@ -383,7 +399,7 @@ def MainAxes(prj):
 	fig.canvas.set_window_title('DiagnosticControl')
 	fig.suptitle(prj.name, fontsize=10, fontweight='bold')
 
-	####### Create axes ########
+	####### Create axes ########dr
 	#axes([left, bottom, width, height])
 	prj.DispLayer = pyplot.axes([0.05, 0.25, 0.15, 0.7])
 	prj.MainPlot = pyplot.axes([0.27, 0.25, 0.7, 0.7])
@@ -410,6 +426,7 @@ def MainAxes(prj):
 	class Action(object):
 		def conv(self, event):
 			print ("Calculate start!")
+			#time.sleep(15)
 			"""
 			prj.MainPlot.cla()
 			prj.layer_plot={}
@@ -465,7 +482,6 @@ def main():
         prj = Project(sys.argv[1])
         read_config(prj)
     else:
-        print("Usage : python pygerber2gcode_cui.py config_file")
         exit()
 
     if len(prj.layers) < 1:
